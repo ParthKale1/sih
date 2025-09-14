@@ -1,0 +1,2540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediVault - Advanced Medical Records Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --primary-light: #e0c3fc;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #06ffa5;
+            --warning: #ffbe0b;
+            --danger: #ff006e;
+            --info: #00b4d8;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .logo i {
+            margin-right: 0.8rem;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent), var(--warning));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .notification-bell:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .user-avatar:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.2) 0%, rgba(67, 97, 238, 0) 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(247, 37, 133, 0.2) 0%, rgba(247, 37, 133, 0) 70%);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--white), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+            line-height: 1.1;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: var(--transition);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Dashboard Section */
+        .dashboard {
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        .dashboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 40px 40px 0 0;
+            z-index: -1;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 80%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 4px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            border: 2px solid var(--gray-light);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-icon.primary {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+        }
+
+        .card-icon.success {
+            background: linear-gradient(135deg, #d4f1d4, var(--success));
+            color: white;
+        }
+
+        .card-icon.danger {
+            background: linear-gradient(135deg, #ffd6d6, var(--danger));
+            color: white;
+        }
+
+        .card-value {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-description {
+            color: var(--gray);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .card-chart {
+            margin-top: 1.5rem;
+            height: 60px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 8px;
+            background: linear-gradient(to top, var(--primary), var(--primary-light));
+            border-radius: 4px 4px 0 0;
+            transition: var(--transition);
+        }
+
+        .chart-bar:hover {
+            transform: scaleY(1.1);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            margin: 4rem 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+            min-height: 200px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 50%;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 3rem;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 3rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.3);
+            border-color: var(--accent);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: -10px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -10px;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -15px;
+            border-width: 10px 0 10px 15px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -15px;
+            border-width: 10px 15px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .timeline-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .timeline-type {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .empty-timeline {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .empty-timeline i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Records Section */
+        .records-section {
+            margin: 4rem 0;
+        }
+
+        .records-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3.5rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .view-toggle {
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            padding: 0.3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .view-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .records-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .records-table th {
+            background: linear-gradient(135deg, var(--primary-light), #d6e4ff);
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .records-table td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--gray-light);
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .records-table tr:hover td {
+            background-color: var(--primary-light);
+        }
+
+        .records-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge i {
+            font-size: 0.7rem;
+        }
+
+        .status-badge.completed {
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.2), rgba(6, 255, 165, 0.05));
+            color: var(--success);
+            border: 1px solid rgba(6, 255, 165, 0.3);
+        }
+
+        .status-badge.pending {
+            background: linear-gradient(135deg, rgba(255, 190, 11, 0.2), rgba(255, 190, 11, 0.05));
+            color: var(--warning);
+            border: 1px solid rgba(255, 190, 11, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-light);
+            color: var(--dark);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-icon:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-icon:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-icon.view:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-icon.download:hover {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 8px 20px rgba(6, 255, 165, 0.4);
+        }
+
+        .btn-icon.edit:hover {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 190, 11, 0.4);
+        }
+
+        .btn-icon.delete:hover {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 0, 110, 0.4);
+        }
+
+        .btn-icon.share:hover {
+            background: linear-gradient(135deg, var(--info), #0284c7);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 180, 216, 0.4);
+        }
+
+        /* Floating Action Buttons */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 99;
+        }
+
+        .fab {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fab::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .fab:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .fab-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .fab-primary:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.5);
+        }
+
+        .fab-secondary {
+            background: white;
+            color: var(--primary);
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .fab-container:hover .fab-secondary {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .fab-secondary:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 2.5rem 2.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-light), #e6f0ff);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--gray);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 2rem 2.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background: var(--primary-light);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        /* View Record Modal */
+        .view-record-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            padding: 1.8rem;
+            background: linear-gradient(135deg, var(--primary-light), #f0f7ff);
+            border-radius: 16px;
+            border-left: 5px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .detail-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .detail-label {
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .detail-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Delete Confirmation Modal */
+        .delete-confirmation {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .delete-confirmation i {
+            font-size: 5rem;
+            color: var(--danger);
+            margin-bottom: 2rem;
+            animation: shake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-15px); }
+            75% { transform: translateX(15px); }
+        }
+
+        .delete-confirmation h3 {
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            color: var(--dark);
+            font-weight: 800;
+        }
+
+        .delete-confirmation p {
+            margin-bottom: 3rem;
+            color: var(--gray);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 1.8rem 2.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: var(--transition);
+            border-left: 6px solid;
+            min-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            margin-right: 1.5rem;
+            font-size: 2.2rem;
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.success .notification-icon {
+            color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--danger);
+        }
+
+        .notification.error .notification-icon {
+            color: var(--danger);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification.warning .notification-icon {
+            color: var(--warning);
+        }
+
+        .notification-content h4 {
+            margin-bottom: 0.6rem;
+            font-size: 1.4rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .notification-content p {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark), #1a1a2e);
+            color: white;
+            padding: 6rem 0 3rem;
+            margin-top: 8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to bottom, transparent, rgba(26, 26, 46, 0.8));
+            z-index: 1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+            color: var(--white);
+            font-weight: 800;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-column ul li a {
+            color: #b8bcc8;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1rem;
+            display: inline-block;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .footer-column p {
+            color: #b8bcc8;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b8bcc8;
+            font-size: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 60px !important;
+                padding-right: 0 !important;
+                text-align: left !important;
+            }
+            
+            .timeline-dot {
+                left: 20px !important;
+                right: auto !important;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                padding: 1rem 0;
+            }
+
+            .logo {
+                margin-bottom: 1.5rem;
+            }
+
+            nav ul {
+                margin-bottom: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            nav ul li {
+                margin: 0.3rem 0.8rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fab {
+                width: 56px;
+                height: 56px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .records-table {
+                font-size: 0.9rem;
+            }
+
+            .records-table th,
+            .records-table td {
+                padding: 1rem 0.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .view-record-details {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-column h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                MediVault
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Records</a></li>
+                    <li><a href="#">Appointments</a></li>
+                    <li><a href="#">Doctors</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="user-avatar">PK</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Advanced Medical Records Management</h1>
+            <p>Take complete control of your health information with our secure, intelligent, and user-friendly medical records platform</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn" id="addRecordBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    Add New Record
+                </a>
+                <a href="#" class="btn btn-outline">
+                    <i class="fas fa-info-circle"></i>
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Health Dashboard</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active">
+                        <i class="fas fa-calendar-day"></i>
+                        Today
+                    </button>
+                    <button class="filter-btn">
+                        <i class="fas fa-calendar-week"></i>
+                        This Week
+                    </button>
+                    <button class="filter-btn">
+                        <i class="fas fa-calendar-alt"></i>
+                        This Month
+                    </button>
+                    <button class="filter-btn">
+                        <i class="fas fa-calendar"></i>
+                        All Time
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Records</h3>
+                        <div class="card-icon primary">
+                            <i class="fas fa-file-medical-alt"></i>
+                        </div>
+                    </div>
+                    <div class="card-value" id="totalRecords">4</div>
+                    <p class="card-description">Your medical documents</p>
+                    <div class="card-chart">
+                        <div class="chart-bar" style="height: 40%; left: 10%;"></div>
+                        <div class="chart-bar" style="height: 60%; left: 25%;"></div>
+                        <div class="chart-bar" style="height: 80%; left: 40%;"></div>
+                        <div class="chart-bar" style="height: 45%; left: 55%;"></div>
+                        <div class="chart-bar" style="height: 70%; left: 70%;"></div>
+                        <div class="chart-bar" style="height: 90%; left: 85%;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Appointments</h3>
+                        <div class="card-icon success">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">3</div>
+                    <p class="card-description">Next 30 days</p>
+                    <div class="card-chart">
+                        <div class="chart-bar" style="height: 30%; left: 20%;"></div>
+                        <div class="chart-bar" style="height: 50%; left: 40%;"></div>
+                        <div class="chart-bar" style="height: 70%; left: 60%;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Medication Reminders</h3>
+                        <div class="card-icon danger">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">5</div>
+                    <p class="card-description">Active medications</p>
+                    <div class="card-chart">
+                        <div class="chart-bar" style="height: 60%; left: 15%;"></div>
+                        <div class="chart-bar" style="height: 80%; left: 35%;"></div>
+                        <div class="chart-bar" style="height: 40%; left: 55%;"></div>
+                        <div class="chart-bar" style="height: 90%; left: 75%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Section -->
+            <div class="timeline-section">
+                <h2 class="section-title">Medical Timeline</h2>
+                <div class="timeline" id="timeline">
+                    <!-- Timeline items will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Records Section -->
+            <div class="records-section">
+                <div class="records-controls">
+                    <h2 class="section-title">Medical Records</h2>
+                    <div class="view-toggle">
+                        <button class="view-btn active">
+                            <i class="fas fa-list"></i>
+                            List View
+                        </button>
+                        <button class="view-btn">
+                            <i class="fas fa-th-large"></i>
+                            Card View
+                        </button>
+                        <button class="view-btn">
+                            <i class="fas fa-calendar-alt"></i>
+                            Calendar View
+                        </button>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search records by doctor, type, or description..." id="searchInput">
+                </div>
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Doctor</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                        <!-- Table rows will be dynamically generated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Action Buttons -->
+    <div class="fab-container">
+        <button class="fab fab-secondary">
+            <i class="fas fa-camera"></i>
+        </button>
+        <button class="fab fab-secondary">
+            <i class="fas fa-calendar-plus"></i>
+        </button>
+        <button class="fab fab-primary" id="fabAddRecord">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Add Record Modal -->
+    <div class="modal" id="addRecordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Medical Record</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addRecordForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recordDate">Date</label>
+                            <input type="date" id="recordDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recordType">Record Type</label>
+                            <select id="recordType" required>
+                                <option value="">Select type</option>
+                                <option value="diagnosis">Diagnosis</option>
+                                <option value="prescription">Prescription</option>
+                                <option value="lab-result">Lab Result</option>
+                                <option value="imaging">Imaging</option>
+                                <option value="surgery">Surgery</option>
+                                <option value="vaccination">Vaccination</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="doctorName">Doctor Name</label>
+                            <input type="text" id="doctorName" placeholder="Dr. John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="facility">Healthcare Facility</label>
+                            <input type="text" id="facility" placeholder="City General Hospital">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Brief description of the medical record" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" placeholder="Any additional information or doctor's notes"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" required>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileUpload">Upload Document</label>
+                        <input type="file" id="fileUpload" accept=".pdf,.jpg,.jpeg,.png">
+                        <small>Accepted formats: PDF, JPG, PNG (Max 5MB)</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn" id="saveRecordBtn">
+                    <i class="fas fa-save"></i>
+                    Save Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Record Modal -->
+    <div class="modal" id="editRecordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Medical Record</h3>
+                <button class="modal-close" id="closeEditModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editRecordForm">
+                    <input type="hidden" id="editRecordId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editRecordDate">Date</label>
+                            <input type="date" id="editRecordDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editRecordType">Record Type</label>
+                            <select id="editRecordType" required>
+                                <option value="">Select type</option>
+                                <option value="diagnosis">Diagnosis</option>
+                                <option value="prescription">Prescription</option>
+                                <option value="lab-result">Lab Result</option>
+                                <option value="imaging">Imaging</option>
+                                <option value="surgery">Surgery</option>
+                                <option value="vaccination">Vaccination</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editDoctorName">Doctor Name</label>
+                            <input type="text" id="editDoctorName" placeholder="Dr. John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFacility">Healthcare Facility</label>
+                            <input type="text" id="editFacility" placeholder="City General Hospital">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Description</label>
+                        <textarea id="editDescription" placeholder="Brief description of the medical record" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editNotes">Additional Notes</label>
+                        <textarea id="editNotes" placeholder="Any additional information or doctor's notes"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" required>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+                <button type="button" class="btn btn-warning" id="updateRecordBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Update Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Record Modal -->
+    <div class="modal" id="viewRecordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Medical Record Details</h3>
+                <button class="modal-close" id="closeViewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="view-record-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Date</div>
+                        <div class="detail-value" id="viewDate"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Doctor</div>
+                        <div class="detail-value" id="viewDoctor"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Record Type</div>
+                        <div class="detail-value" id="viewType"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value" id="viewStatus"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Healthcare Facility</div>
+                        <div class="detail-value" id="viewFacility"></div>
+                    </div>
+                    <div class="detail-item detail-full">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value" id="viewDescription"></div>
+                    </div>
+                    <div class="detail-item detail-full">
+                        <div class="detail-label">Notes</div>
+                        <div class="detail-value" id="viewNotes"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" id="downloadRecordBtn">
+                    <i class="fas fa-download"></i>
+                    Download Record
+                </button>
+                <button type="button" class="btn btn-secondary" id="closeViewBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Record Modal -->
+    <div class="modal" id="shareRecordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Share Medical Record</h3>
+                <button class="modal-close" id="closeShareModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="shareEmail">Email Address</label>
+                    <input type="email" id="shareEmail" placeholder="doctor@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="shareMessage">Message (Optional)</label>
+                    <textarea id="shareMessage" placeholder="Add a message to accompany the shared record"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Access Level</label>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="accessLevel" value="view" checked>
+                            <span>View Only</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="accessLevel" value="edit">
+                            <span>Can Edit</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelShareBtn">Cancel</button>
+                <button type="button" class="btn" id="confirmShareBtn">
+                    <i class="fas fa-share-alt"></i>
+                    Share Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content">
+            <div class="delete-confirmation">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Confirm Deletion</h3>
+                <p>Are you sure you want to delete this medical record? This action cannot be undone and all associated data will be permanently removed.</p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash"></i>
+                        Delete Record
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <h4 id="notificationTitle">Success!</h4>
+            <p id="notificationMessage">Your medical record has been saved.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MediVault</h3>
+                    <p>Revolutionizing healthcare management through secure, intelligent, and user-friendly digital solutions. Your health data, protected and accessible anytime, anywhere.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">HIPAA Compliance</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@medivault.com</li>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Health St, Medical City</li>
+                        <li><i class="fas fa-clock"></i> Mon-Fri: 9AM-6PM</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 MediVault. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--danger);"></i> for better healthcare</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data store for records
+        let records = [
+            {
+                id: 1,
+                date: '2023-10-12',
+                doctor: 'Dr. Sarah Johnson',
+                type: 'lab-result',
+                description: 'Blood Test - Complete Blood Count',
+                status: 'completed',
+                facility: 'City General Hospital',
+                notes: 'All values within normal range.'
+            },
+            {
+                id: 2,
+                date: '2023-10-05',
+                doctor: 'Dr. Michael Chen',
+                type: 'prescription',
+                description: 'Amoxicillin 500mg - 3 times daily',
+                status: 'pending',
+                facility: 'City Medical Center',
+                notes: 'Take with food. Complete full course.'
+            },
+            {
+                id: 3,
+                date: '2023-09-28',
+                doctor: 'Dr. Emily Rodriguez',
+                type: 'diagnosis',
+                description: 'Annual Physical Examination',
+                status: 'completed',
+                facility: 'Family Health Clinic',
+                notes: 'Overall good health. Recommended diet and exercise improvements.'
+            },
+            {
+                id: 4,
+                date: '2023-09-15',
+                doctor: 'Dr. James Wilson',
+                type: 'imaging',
+                description: 'Chest X-Ray',
+                status: 'completed',
+                facility: 'Radiology Center',
+                notes: 'No abnormalities detected. Clear lungs.'
+            }
+        ];
+
+        let nextId = 5;
+        let recordToDelete = null;
+        let recordToShare = null;
+
+        // DOM Elements
+        const addRecordBtn = document.getElementById('addRecordBtn');
+        const fabAddRecord = document.getElementById('fabAddRecord');
+        const addRecordModal = document.getElementById('addRecordModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveRecordBtn = document.getElementById('saveRecordBtn');
+        
+        const editRecordModal = document.getElementById('editRecordModal');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const updateRecordBtn = document.getElementById('updateRecordBtn');
+        
+        const viewRecordModal = document.getElementById('viewRecordModal');
+        const closeViewModal = document.getElementById('closeViewModal');
+        const closeViewBtn = document.getElementById('closeViewBtn');
+        const downloadRecordBtn = document.getElementById('downloadRecordBtn');
+        
+        const shareRecordModal = document.getElementById('shareRecordModal');
+        const closeShareModal = document.getElementById('closeShareModal');
+        const cancelShareBtn = document.getElementById('cancelShareBtn');
+        const confirmShareBtn = document.getElementById('confirmShareBtn');
+        
+        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        
+        const notification = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const recordsTableBody = document.getElementById('recordsTableBody');
+        const timeline = document.getElementById('timeline');
+        const totalRecordsElement = document.getElementById('totalRecords');
+        const searchInput = document.getElementById('searchInput');
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Format record type for display
+        function formatRecordType(type) {
+            return type.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        // Show notification
+        function showNotification(title, message, type = 'success') {
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Reset notification classes
+            notification.className = 'notification';
+            notification.classList.add(type);
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Render timeline
+        function renderTimeline() {
+            timeline.innerHTML = '';
+            
+            if (records.length === 0) {
+                timeline.innerHTML = `
+                    <div class="empty-timeline">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No medical records found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort records by date (newest first)
+            const sortedRecords = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Show only the 6 most recent records
+            const recentRecords = sortedRecords.slice(0, 6);
+            
+            recentRecords.forEach((record, index) => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.style.animationDelay = `${index * 0.1}s`;
+                
+                timelineItem.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">${formatDate(record.date)}</div>
+                        <div class="timeline-title">${record.description}</div>
+                        <div class="timeline-description">${record.doctor} at ${record.facility}</div>
+                        <span class="timeline-type">${formatRecordType(record.type)}</span>
+                    </div>
+                `;
+                
+                timeline.appendChild(timelineItem);
+            });
+        }
+
+        // Render records table
+        function renderRecords(recordsToRender = records) {
+            recordsTableBody.innerHTML = '';
+            
+            recordsToRender.forEach(record => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', record.id);
+                
+                // Create status badge
+                const statusBadge = document.createElement('span');
+                statusBadge.className = `status-badge ${record.status}`;
+                statusBadge.innerHTML = record.status === 'completed' 
+                    ? '<i class="fas fa-check-circle"></i> Completed'
+                    : '<i class="fas fa-clock"></i> Pending';
+                
+                // Create action buttons
+                const actionButtons = document.createElement('div');
+                actionButtons.className = 'action-buttons';
+                
+                const viewButton = document.createElement('button');
+                viewButton.className = 'btn-icon view';
+                viewButton.setAttribute('data-id', record.id);
+                viewButton.innerHTML = '<i class="fas fa-eye"></i>';
+                
+                const downloadButton = document.createElement('button');
+                downloadButton.className = 'btn-icon download';
+                downloadButton.setAttribute('data-id', record.id);
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                
+                const shareButton = document.createElement('button');
+                shareButton.className = 'btn-icon share';
+                shareButton.setAttribute('data-id', record.id);
+                shareButton.innerHTML = '<i class="fas fa-share-alt"></i>';
+                
+                const editButton = document.createElement('button');
+                editButton.className = 'btn-icon edit';
+                editButton.setAttribute('data-id', record.id);
+                editButton.innerHTML = '<i class="fas fa-edit"></i>';
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn-icon delete';
+                deleteButton.setAttribute('data-id', record.id);
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                
+                actionButtons.appendChild(viewButton);
+                actionButtons.appendChild(downloadButton);
+                actionButtons.appendChild(shareButton);
+                actionButtons.appendChild(editButton);
+                actionButtons.appendChild(deleteButton);
+                
+                // Add cells to row
+                const dateCell = document.createElement('td');
+                dateCell.textContent = formatDate(record.date);
+                
+                const doctorCell = document.createElement('td');
+                doctorCell.textContent = record.doctor;
+                
+                const typeCell = document.createElement('td');
+                typeCell.textContent = formatRecordType(record.type);
+                
+                const descriptionCell = document.createElement('td');
+                descriptionCell.textContent = record.description;
+                
+                const statusCell = document.createElement('td');
+                statusCell.appendChild(statusBadge);
+                
+                const actionsCell = document.createElement('td');
+                actionsCell.appendChild(actionButtons);
+                
+                row.appendChild(dateCell);
+                row.appendChild(doctorCell);
+                row.appendChild(typeCell);
+                row.appendChild(descriptionCell);
+                row.appendChild(statusCell);
+                row.appendChild(actionsCell);
+                
+                recordsTableBody.appendChild(row);
+            });
+            
+            // Update total records count
+            totalRecordsElement.textContent = records.length;
+            
+            // Update timeline
+            renderTimeline();
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.view').forEach(button => {
+                button.addEventListener('click', handleViewRecord);
+            });
+            
+            document.querySelectorAll('.download').forEach(button => {
+                button.addEventListener('click', handleDownloadRecord);
+            });
+            
+            document.querySelectorAll('.share').forEach(button => {
+                button.addEventListener('click', handleShareRecord);
+            });
+            
+            document.querySelectorAll('.edit').forEach(button => {
+                button.addEventListener('click', handleEditRecord);
+            });
+            
+            document.querySelectorAll('.delete').forEach(button => {
+                button.addEventListener('click', handleDeleteRecord);
+            });
+        }
+
+        // Open add record modal
+        function openAddRecordModal() {
+            addRecordModal.style.display = 'flex';
+            document.getElementById('recordDate').valueAsDate = new Date();
+        }
+
+        addRecordBtn.addEventListener('click', openAddRecordModal);
+        fabAddRecord.addEventListener('click', openAddRecordModal);
+
+        // Close add record modal
+        closeModal.addEventListener('click', () => {
+            addRecordModal.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            addRecordModal.style.display = 'none';
+        });
+
+        // Close edit record modal
+        closeEditModal.addEventListener('click', () => {
+            editRecordModal.style.display = 'none';
+        });
+
+        cancelEditBtn.addEventListener('click', () => {
+            editRecordModal.style.display = 'none';
+        });
+
+        // Close view record modal
+        closeViewModal.addEventListener('click', () => {
+            viewRecordModal.style.display = 'none';
+        });
+
+        closeViewBtn.addEventListener('click', () => {
+            viewRecordModal.style.display = 'none';
+        });
+
+        // Close share record modal
+        closeShareModal.addEventListener('click', () => {
+            shareRecordModal.style.display = 'none';
+        });
+
+        cancelShareBtn.addEventListener('click', () => {
+            shareRecordModal.style.display = 'none';
+        });
+
+        // Close delete confirmation modal
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteConfirmModal.style.display = 'none';
+            recordToDelete = null;
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === addRecordModal) {
+                addRecordModal.style.display = 'none';
+            }
+            if (e.target === editRecordModal) {
+                editRecordModal.style.display = 'none';
+            }
+            if (e.target === viewRecordModal) {
+                viewRecordModal.style.display = 'none';
+            }
+            if (e.target === shareRecordModal) {
+                shareRecordModal.style.display = 'none';
+            }
+            if (e.target === deleteConfirmModal) {
+                deleteConfirmModal.style.display = 'none';
+                recordToDelete = null;
+            }
+        });
+
+        // Save record functionality
+        saveRecordBtn.addEventListener('click', () => {
+            const form = document.getElementById('addRecordForm');
+            if (form.checkValidity()) {
+                // Get form values
+                const recordDate = document.getElementById('recordDate').value;
+                const recordType = document.getElementById('recordType').value;
+                const doctorName = document.getElementById('doctorName').value;
+                const facility = document.getElementById('facility').value || 'Not specified';
+                const description = document.getElementById('description').value;
+                const notes = document.getElementById('notes').value || 'No additional notes';
+                const status = document.getElementById('status').value;
+                
+                // Create new record object
+                const newRecord = {
+                    id: nextId++,
+                    date: recordDate,
+                    type: recordType,
+                    doctor: doctorName,
+                    facility: facility,
+                    description: description,
+                    notes: notes,
+                    status: status
+                };
+                
+                // Add to records array
+                records.unshift(newRecord);
+                
+                // Re-render table and timeline
+                renderRecords();
+                
+                // Show notification
+                showNotification('Success!', 'Medical record added successfully!');
+                
+                // Close modal and reset form
+                addRecordModal.style.display = 'none';
+                form.reset();
+                document.getElementById('recordDate').valueAsDate = new Date();
+            } else {
+                form.reportValidity();
+            }
+        });
+
+        // Update record functionality
+        updateRecordBtn.addEventListener('click', () => {
+            const form = document.getElementById('editRecordForm');
+            if (form.checkValidity()) {
+                // Get form values
+                const recordId = parseInt(document.getElementById('editRecordId').value);
+                const recordDate = document.getElementById('editRecordDate').value;
+                const recordType = document.getElementById('editRecordType').value;
+                const doctorName = document.getElementById('editDoctorName').value;
+                const facility = document.getElementById('editFacility').value || 'Not specified';
+                const description = document.getElementById('editDescription').value;
+                const notes = document.getElementById('editNotes').value || 'No additional notes';
+                const status = document.getElementById('editStatus').value;
+                
+                // Find record index
+                const recordIndex = records.findIndex(r => r.id === recordId);
+                
+                if (recordIndex !== -1) {
+                    // Update record
+                    records[recordIndex] = {
+                        id: recordId,
+                        date: recordDate,
+                        type: recordType,
+                        doctor: doctorName,
+                        facility: facility,
+                        description: description,
+                        notes: notes,
+                        status: status
+                    };
+                    
+                    // Re-render table and timeline
+                    renderRecords();
+                    
+                    // Show notification
+                    showNotification('Success!', 'Medical record updated successfully!');
+                    
+                    // Close modal
+                    editRecordModal.style.display = 'none';
+                }
+            } else {
+                form.reportValidity();
+            }
+        });
+
+        // View record functionality
+        function handleViewRecord(e) {
+            const recordId = parseInt(e.currentTarget.getAttribute('data-id'));
+            const record = records.find(r => r.id === recordId);
+            
+            if (record) {
+                // Populate view modal
+                document.getElementById('viewDate').textContent = formatDate(record.date);
+                document.getElementById('viewDoctor').textContent = record.doctor;
+                document.getElementById('viewType').textContent = formatRecordType(record.type);
+                document.getElementById('viewStatus').textContent = record.status.charAt(0).toUpperCase() + record.status.slice(1);
+                document.getElementById('viewFacility').textContent = record.facility;
+                document.getElementById('viewDescription').textContent = record.description;
+                document.getElementById('viewNotes').textContent = record.notes;
+                
+                // Show modal
+                viewRecordModal.style.display = 'flex';
+            }
+        }
+
+        // Download record functionality
+        function handleDownloadRecord(e) {
+            const recordId = parseInt(e.currentTarget.getAttribute('data-id'));
+            const record = records.find(r => r.id === recordId);
+            
+            if (record) {
+                // In a real application, this would download the actual file
+                showNotification('Download Started', `Downloading record: ${record.description}`, 'success');
+            }
+        }
+
+        // Share record functionality
+        function handleShareRecord(e) {
+            const recordId = parseInt(e.currentTarget.getAttribute('data-id'));
+            recordToShare = recordId;
+            
+            // Show share modal
+            shareRecordModal.style.display = 'flex';
+        }
+
+        // Confirm share functionality
+        confirmShareBtn.addEventListener('click', () => {
+            const email = document.getElementById('shareEmail').value;
+            const message = document.getElementById('shareMessage').value;
+            const accessLevel = document.querySelector('input[name="accessLevel"]:checked').value;
+            
+            if (email && recordToShare) {
+                const record = records.find(r => r.id === recordToShare);
+                
+                if (record) {
+                    // In a real application, this would send an email with a secure link
+                    showNotification('Shared Successfully!', `Record shared with ${email}`, 'success');
+                    
+                    // Close modal and reset form
+                    shareRecordModal.style.display = 'none';
+                    document.getElementById('shareEmail').value = '';
+                    document.getElementById('shareMessage').value = '';
+                    recordToShare = null;
+                }
+            } else {
+                showNotification('Error', 'Please enter a valid email address', 'error');
+            }
+        });
+
+        // Edit record functionality
+        function handleEditRecord(e) {
+            const recordId = parseInt(e.currentTarget.getAttribute('data-id'));
+            const record = records.find(r => r.id === recordId);
+            
+            if (record) {
+                // Populate edit form
+                document.getElementById('editRecordId').value = record.id;
+                document.getElementById('editRecordDate').value = record.date;
+                document.getElementById('editRecordType').value = record.type;
+                document.getElementById('editDoctorName').value = record.doctor;
+                document.getElementById('editFacility').value = record.facility;
+                document.getElementById('editDescription').value = record.description;
+                document.getElementById('editNotes').value = record.notes;
+                document.getElementById('editStatus').value = record.status;
+                
+                // Show modal
+                editRecordModal.style.display = 'flex';
+            }
+        }
+
+        // Delete record functionality
+        function handleDeleteRecord(e) {
+            const recordId = parseInt(e.currentTarget.getAttribute('data-id'));
+            recordToDelete = recordId;
+            
+            // Show confirmation modal
+            deleteConfirmModal.style.display = 'flex';
+        }
+
+        // Confirm delete functionality
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (recordToDelete !== null) {
+                // Find record index
+                const recordIndex = records.findIndex(r => r.id === recordToDelete);
+                
+                if (recordIndex !== -1) {
+                    // Remove record
+                    records.splice(recordIndex, 1);
+                    
+                    // Re-render table and timeline
+                    renderRecords();
+                    
+                    // Show notification
+                    showNotification('Deleted', 'Medical record has been deleted.', 'warning');
+                }
+                
+                // Close modal
+                deleteConfirmModal.style.display = 'none';
+                recordToDelete = null;
+            }
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                renderRecords();
+            } else {
+                const filteredRecords = records.filter(record => {
+                    return (
+                        formatDate(record.date).toLowerCase().includes(searchTerm) ||
+                        record.doctor.toLowerCase().includes(searchTerm) ||
+                        formatRecordType(record.type).toLowerCase().includes(searchTerm) ||
+                        record.description.toLowerCase().includes(searchTerm) ||
+                        record.status.toLowerCase().includes(searchTerm) ||
+                        record.facility.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                renderRecords(filteredRecords);
+            }
+        });
+
+        // Filter buttons functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // In a real application, this would filter records based on the selected time period
+                showNotification('Filter Applied', `Showing records for: ${btn.textContent.trim()}`, 'success');
+            });
+        });
+
+        // View toggle functionality
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // In a real application, this would switch between list, card, and calendar views
+                showNotification('View Changed', `Switched to: ${btn.textContent.trim()}`, 'success');
+            });
+        });
+
+        // Initialize the table and timeline
+        renderRecords();
+    </script>
+</body>
+</html>
