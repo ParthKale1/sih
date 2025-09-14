@@ -1158,38 +1158,6 @@
         .detail-full {
             grid-column: 1 / -1;
         }
-        /* Delete Confirmation Modal */
-        .delete-confirmation {
-            text-align: center;
-            padding: 3rem;
-        }
-        .delete-confirmation i {
-            font-size: 5rem;
-            color: var(--danger);
-            margin-bottom: 2rem;
-            animation: shake 0.5s ease-in-out infinite;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-15px); }
-            75% { transform: translateX(15px); }
-        }
-        .delete-confirmation h3 {
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
-            color: var(--dark);
-            font-weight: 800;
-        }
-        .delete-confirmation p {
-            margin-bottom: 3rem;
-            color: var(--gray);
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
-        .delete-confirmation .btn {
-            padding: 0.8rem 1.5rem; /* Smaller button size */
-            font-size: 0.9rem; /* Smaller font size */
-        }
         /* Notification */
         .notification {
             position: fixed;
@@ -1835,23 +1803,6 @@
             </div>
         </div>
     </div>
-    <!-- Delete Confirmation Modal -->
-    <div class="modal" id="deleteConfirmModal">
-        <div class="modal-content">
-            <div class="delete-confirmation">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Confirm Deletion</h3>
-                <p>Are you sure you want to delete this medical record? This action cannot be undone and all associated data will be permanently removed.</p>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
-                        <i class="fas fa-trash"></i>
-                        Delete Record
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Notification -->
     <div class="notification" id="notification">
         <div class="notification-icon">
@@ -1956,7 +1907,6 @@
             }
         ];
         let nextId = 5;
-        let recordToDelete = null;
         let recordToShare = null;
         let currentView = 'list'; // Default view is list
         let currentMonth = new Date().getMonth();
@@ -1984,10 +1934,6 @@
         const closeShareModal = document.getElementById('closeShareModal');
         const cancelShareBtn = document.getElementById('cancelShareBtn');
         const confirmShareBtn = document.getElementById('confirmShareBtn');
-        
-        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
-        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         
         const notification = document.getElementById('notification');
         const notificationTitle = document.getElementById('notificationTitle');
@@ -2552,12 +2498,6 @@
             shareRecordModal.style.display = 'none';
         });
         
-        // Close delete confirmation modal
-        cancelDeleteBtn.addEventListener('click', () => {
-            deleteConfirmModal.style.display = 'none';
-            recordToDelete = null;
-        });
-        
         // Close modals when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target === addRecordModal) {
@@ -2571,10 +2511,6 @@
             }
             if (e.target === shareRecordModal) {
                 shareRecordModal.style.display = 'none';
-            }
-            if (e.target === deleteConfirmModal) {
-                deleteConfirmModal.style.display = 'none';
-                recordToDelete = null;
             }
         });
         
@@ -2750,37 +2686,27 @@
             }
         }
         
-        // Delete record functionality
+        // Delete record functionality - Direct deletion without confirmation
         function handleDeleteRecord(e) {
             const recordId = parseInt(e.currentTarget.getAttribute('data-id'));
-            recordToDelete = recordId;
             
-            // Show confirmation modal
-            deleteConfirmModal.style.display = 'flex';
-        }
-        
-        // Confirm delete functionality
-        confirmDeleteBtn.addEventListener('click', () => {
-            if (recordToDelete !== null) {
-                // Find record index
-                const recordIndex = records.findIndex(r => r.id === recordToDelete);
+            // Find record index
+            const recordIndex = records.findIndex(r => r.id === recordId);
+            
+            if (recordIndex !== -1) {
+                // Get record details for notification
+                const deletedRecord = records[recordIndex];
                 
-                if (recordIndex !== -1) {
-                    // Remove record
-                    records.splice(recordIndex, 1);
-                    
-                    // Re-render records
-                    renderRecords();
-                    
-                    // Show notification
-                    showNotification('Deleted', 'Medical record has been deleted.', 'warning');
-                }
+                // Remove record
+                records.splice(recordIndex, 1);
                 
-                // Close modal
-                deleteConfirmModal.style.display = 'none';
-                recordToDelete = null;
+                // Re-render records
+                renderRecords();
+                
+                // Show notification
+                showNotification('Deleted', `Medical record "${deletedRecord.description}" has been deleted.`, 'warning');
             }
-        });
+        }
         
         // Search functionality
         searchInput.addEventListener('input', (e) => {
